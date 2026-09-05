@@ -145,4 +145,4 @@ Processed file:
 
 `data/processed/crashes_clean_2022_2026.csv`
 
-The next processing step is to spatially assign each crash with valid coordinates to a NYC LION roadway `SegmentID` so crash exposure can be analyzed together with traffic volume and bicycle-network characteristics.
+
