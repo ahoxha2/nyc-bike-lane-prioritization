@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 ## Traffic Volume Processing
 
 Traffic exposure was derived from the **NYC Automated Traffic Volume Counts** dataset for **2022–2026**. The analysis was restricted to **Manhattan, Bronx, Brooklyn, and Queens**, consistent with the project study area.
@@ -95,3 +96,9 @@ Final fields include:
 | `direction_coverage` | Directional coverage QA category |
 
 > **Important:** `total_7_24` represents the sum of the traffic directions actually observed for that segment-date. It should not automatically be interpreted as a complete two-way roadway traffic count when `direction_coverage` indicates only one observed direction.
+=======
+\#
+
+this folder contains processed ds
+
+>>>>>>> Stashed changes
