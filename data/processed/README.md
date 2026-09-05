@@ -1,104 +1,148 @@
-<<<<<<< Updated upstream
-## Traffic Volume Processing
+## Data Preparation
 
-Traffic exposure was derived from the **NYC Automated Traffic Volume Counts** dataset for **2022–2026**. The analysis was restricted to **Manhattan, Bronx, Brooklyn, and Queens**, consistent with the project study area.
+### Automated Traffic Volume Counts
 
-The source dataset contains traffic-volume observations recorded at **15-minute intervals**, with each observation associated with a `SegmentID`, date, direction, street location, and point geometry.
+Traffic exposure was derived from the **NYC Automated Traffic Volume Counts** dataset.
 
-### Time-of-Day Aggregation
+The raw dataset contains 15-minute traffic observations with fields including:
 
-For this project, traffic observations were restricted to **07:00–23:59** and grouped into three time periods:
+- `RequestID`
+- `Boro`
+- `Yr`
+- `M`
+- `D`
+- `HH`
+- `MM`
+- `Vol`
+- `SegmentID`
+- `WktGeom`
+- `street`
+- `fromSt`
+- `toSt`
+- `Direction`
 
-| Period | Time |
-|---|---|
-| Morning | 07:00–11:59 |
-| Afternoon | 12:00–17:59 |
-| Evening | 18:00–23:59 |
+The analysis was limited to:
 
-The 15-minute `Vol` observations were summed within each period for each roadway segment, date, and observed travel direction.
+- Manhattan
+- Bronx
+- Brooklyn
+- Queens
+- Years 2022–2026
 
-Expected interval counts were:
+Staten Island was excluded from the study area.
 
-- Morning: 20 observations
-- Afternoon: 24 observations
-- Evening: 24 observations
+Duplicate 15-minute records were removed using the combination of:
 
-This allowed incomplete monitoring periods to be identified before the traffic data were used for analysis.
+`RequestID + SegmentID + date + Direction + HH + MM`
 
-### Directional Traffic
+Traffic counts were grouped into three time periods:
 
-Traffic direction was preserved during the initial aggregation. For example, northbound and southbound observations for the same roadway segment were initially treated as separate records.
+- **Morning:** 07:00–11:59
+- **Afternoon:** 12:00–17:59
+- **Evening:** 18:00–23:59
 
-Observed directions were then summed for each `SegmentID`, date, and time period to create the traffic totals used in the daily dataset.
+For each segment, date, street location, and direction, the 15-minute observations were summed into period totals.
 
-Because traffic-count coverage is not uniform across NYC, not every segment was monitored in both directions. Two QA fields were therefore retained:
+Observed directions were then combined for each segment-date-time period. The number of observed directions was retained so that one-direction counts are not interpreted as complete two-way traffic totals.
 
-- `directions_n` — number of observed traffic directions
-- `direction_coverage` — identifies records with one, two, or three observed directions
+The final traffic dataset contains:
 
-This prevents a one-direction traffic count from being incorrectly interpreted as a complete two-way roadway count.
+- `morning`
+- `afternoon`
+- `evening`
+- `total_7_24`
+- `directions_n`
+- `direction_coverage`
+- street and location information
+- `SegmentID`
 
-### Daily Traffic Dataset
+Records missing one or more complete time periods were excluded.
 
-The three time-period totals were pivoted into a single record for each segment and date:
+Additional quality control identified zero-volume records that were likely data artifacts. Sixteen zero-volume segment-date records were removed.
 
-- `morning` — observed traffic volume from 07:00–11:59
-- `afternoon` — observed traffic volume from 12:00–17:59
-- `evening` — observed traffic volume from 18:00–23:59
-- `total_7_24` — sum of the three periods, representing observed traffic from 07:00–23:59
+The final processed traffic dataset contains **2,720 segment-date records**.
 
-The raw observed traffic counts are retained in the processed dataset. Mean, median, percentile, normalization, or other statistical transformations can therefore be calculated separately for subsequent analysis without replacing the underlying observations.
-
-### Quality Control
-
-Several QA steps were performed before creating the final dataset:
-
-1. Records were restricted to 2022–2026 and the four study-area boroughs.
-2. Duplicate 15-minute records were removed.
-3. Traffic volume (`Vol`) was converted to numeric format.
-4. Morning, afternoon, and evening observations were aggregated separately.
-5. Records missing one or more of the three required time periods were excluded.
-6. Zero-volume daily records were inspected and excluded from the final analytical dataset as likely data-quality artifacts.
-
-The daily aggregation initially produced **2,764 segment-date records**.
-
-- **2,736** had all three required time periods.
-- **28** incomplete segment-date records were excluded.
-- **16** zero-volume records were subsequently excluded.
-- **2,720** valid segment-date records remained in the final processed dataset.
-
-### Final Output
-
-The processed dataset is stored at:
+Processed file:
 
 `data/processed/traffic_daily_2022_2026.csv`
 
-Final fields include:
+---
 
-| Field | Description |
-|---|---|
-| `RequestID` | Traffic-count request identifier |
-| `Boro` | Borough |
-| `Date` | Observation date |
-| `Yr` | Year |
-| `M` | Month |
-| `D` | Day |
-| `SegmentID` | NYC roadway segment identifier |
-| `WktGeom` | Traffic-count point geometry |
-| `street` | Street name |
-| `fromSt` | Beginning cross street |
-| `toSt` | Ending cross street |
-| `morning` | Raw observed traffic volume, 07:00–11:59 |
-| `afternoon` | Raw observed traffic volume, 12:00–17:59 |
-| `evening` | Raw observed traffic volume, 18:00–23:59 |
-| `total_7_24` | Total observed traffic volume, 07:00–23:59 |
-| `directions_n` | Number of observed travel directions |
-| `direction_coverage` | Directional coverage QA category |
+### Motor Vehicle Collision Data
 
-> **Important:** `total_7_24` represents the sum of the traffic directions actually observed for that segment-date. It should not automatically be interpreted as a complete two-way roadway traffic count when `direction_coverage` indicates only one observed direction.
-=======
-\#
+Crash data were derived from the **NYC Motor Vehicle Collisions – Crashes** dataset.
 
-this folder contains processed ds
+The raw crash dataset contains individual collision events with information on:
 
->>>>>>> Stashed changes
+- crash date and time
+- borough
+- latitude and longitude
+- street location
+- persons injured and killed
+- pedestrians injured and killed
+- cyclists injured and killed
+- motorists injured and killed
+- collision ID
+
+The crash dataset was limited to:
+
+- Manhattan
+- Bronx
+- Brooklyn
+- Queens
+- Years 2022–2026
+
+To make the crash analysis consistent with the traffic-volume analysis, crashes were also restricted to the same daily analysis window:
+
+**07:00–23:59**
+
+Each crash event was assigned to one of three time groups:
+
+- **Morning:** 07:00–11:59
+- **Afternoon:** 12:00–17:59
+- **Evening:** 18:00–23:59
+
+Unlike the traffic dataset, crashes were not aggregated during this cleaning step. Each row remains an individual collision event so that crash-level injury, fatality, location, and time information is preserved.
+
+After the temporal and borough filters, the cleaned dataset contains **237,003 crash events**.
+
+### Coordinate Quality Control
+
+Crash coordinates were checked before spatial matching.
+
+Two types of unusable coordinates were identified:
+
+- missing latitude/longitude
+- latitude/longitude values equal to zero
+
+A new Boolean field, `valid_coords`, was created.
+
+Results:
+
+- **229,527 crashes** have valid coordinates
+- **7,476 crashes** have missing or invalid coordinates
+
+Crashes with invalid coordinates were retained in the cleaned dataset because many still contain usable street or address information.
+
+The cleaned crash dataset retains:
+
+- `COLLISION_ID`
+- `CRASH DATE`
+- `CRASH TIME`
+- `time_group`
+- `BOROUGH`
+- `ZIP CODE`
+- `LATITUDE`
+- `LONGITUDE`
+- `LOCATION`
+- `valid_coords`
+- `ON STREET NAME`
+- `CROSS STREET NAME`
+- `OFF STREET NAME`
+- injury and fatality counts for persons, pedestrians, cyclists, and motorists
+
+Processed file:
+
+`data/processed/crashes_clean_2022_2026.csv`
+
+The next processing step is to spatially assign each crash with valid coordinates to a NYC LION roadway `SegmentID` so crash exposure can be analyzed together with traffic volume and bicycle-network characteristics.
