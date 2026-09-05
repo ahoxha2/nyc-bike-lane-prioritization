@@ -1,14 +1,19 @@
+# Raw data
 data/raw/*
 !data/raw/README.md
 
+# Intermediate data
 data/interim/*
 
+# QGIS temporary files
 *.gpkg-wal
 *.gpkg-shm
 *.qgz~
 
+# Python temporary files
 __pycache__/
 .ipynb_checkpoints/
 *.pyc
 
+# Windows
 Thumbs.db
