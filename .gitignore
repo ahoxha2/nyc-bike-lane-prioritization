@@ -5,6 +5,11 @@ data/raw/*
 # Intermediate data
 data/interim/*
 
+# Local QGIS working data
+qgis/*.gpkg
+qgis/*.tif
+qgis/*.tif.aux.xml
+
 # QGIS temporary files
 *.gpkg-wal
 *.gpkg-shm
