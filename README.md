@@ -9,17 +9,17 @@ Identify bike-route segments where protected infrastructure may have the stronge
 ## Final Maps
 
 ### 1. Final Priority Map
-![Final Priority Map](outputs/maps/01_final_priority_map.png)
+![Final Priority Map](outputs/maps/01_final_priority_map.pdf)
 
 Shows the final Top 50 priority segments and the most robust segments identified across sensitivity scenarios.
 
 ### 2. Citywide Priority Scores
-![Citywide Priority Scores](outputs/maps/02_citywide_priority_scores.png)
+![Citywide Priority Scores](outputs/maps/02_citywide_priority_scores.pdf)
 
 Shows the distribution of final priority scores across all 7,569 eligible non-protected bicycle-route segments.
 
 ### 3. Priority Ranking Robustness
-![Priority Ranking Robustness](outputs/maps/03_priority_ranking_robustness.png)
+![Priority Ranking Robustness](outputs/maps/03_priority_ranking_robustness.pdf)
 
 Shows how consistently segments appeared in the Top 50 across the three weighting scenarios.
 
