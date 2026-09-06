@@ -5,10 +5,10 @@ data/raw/*
 # Intermediate data
 data/interim/*
 
-# QGIS temporary files
-*.gpkg-wal
-*.gpkg-shm
-*.qgz~
+# Local QGIS working data
+qgis/*.gpkg
+qgis/*.tif
+qgis/*.tif.aux.xml
 
 # Python temporary files
 __pycache__/
