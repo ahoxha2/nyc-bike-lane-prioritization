@@ -9,6 +9,10 @@ data/interim/*
 qgis/*.gpkg
 qgis/*.tif
 qgis/*.tif.aux.xml
+# QGIS temporary files
+*.gpkg-wal
+*.gpkg-shm
+*.qgz~
 
 # Python temporary files
 __pycache__/
